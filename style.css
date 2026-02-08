@@ -7,16 +7,16 @@
 }
 
 body {
-  background: #f0f2f5;
-  color: #333;
+  background: #121212; /* Dark background like Spotify */
+  color: #e0e0e0;
   line-height: 1.6;
 }
 
 /* ========== HEADER / NAV ========== */
 header {
-  background: #0f172a; /* dark modern navy */
-  color: #fff;
+  background: #1f1f1f;
   padding: 20px 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 
 header nav {
@@ -29,8 +29,8 @@ header nav {
 
 header h1 {
   font-size: 1.8rem;
+  color: #1ed760; /* neon green accent */
   font-weight: 700;
-  letter-spacing: 1px;
 }
 
 header ul {
@@ -40,43 +40,40 @@ header ul {
 }
 
 header ul li a {
-  color: #f0f2f5;
+  color: #e0e0e0;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
 header ul li a:hover {
-  color: #3b82f6;
+  color: #1ed760;
 }
 
 /* ========== HERO SECTION ========== */
 .hero {
-  background: linear-gradient(135deg, #3b82f6, #06b6d4); /* vibrant gradient */
-  color: white;
+  background: linear-gradient(135deg, #1f1f1f, #181818);
   text-align: center;
-  padding: 100px 20px;
-  border-radius: 0 0 50% 50% / 10% 10% 50% 50%;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  padding: 120px 20px;
 }
 
 .hero h2 {
   font-size: 3rem;
-  margin-bottom: 20px;
-  font-weight: 700;
+  margin-bottom: 15px;
+  color: #1ed760;
 }
 
 .hero p {
   font-size: 1.2rem;
   margin-bottom: 30px;
-  opacity: 0.9;
+  color: #cfcfcf;
 }
 
 .btn {
   display: inline-block;
   padding: 14px 30px;
-  background: #06b6d4;
-  color: white;
+  background: #1ed760;
+  color: #121212;
   border-radius: 50px;
   font-weight: 600;
   text-decoration: none;
@@ -84,7 +81,7 @@ header ul li a:hover {
 }
 
 .btn:hover {
-  background: #3b82f6;
+  background: #14b347;
   transform: translateY(-3px);
 }
 
@@ -99,34 +96,33 @@ header ul li a:hover {
 }
 
 .feature {
-  background: white;
-  border-radius: 20px;
+  background: #1e1e1e;
+  border-radius: 15px;
   padding: 30px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .feature:hover {
   transform: translateY(-10px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  box-shadow: 0 12px 30px rgba(30, 215, 96, 0.4); /* neon glow on hover */
 }
 
 .feature h3 {
-  color: #0f172a;
+  color: #1ed760;
   margin-bottom: 15px;
   font-size: 1.4rem;
 }
 
 .feature p {
   margin-bottom: 15px;
-  color: #4b5563;
+  color: #cfcfcf;
 }
 
 .feature a {
-  color: #3b82f6;
+  color: #1ed760;
   font-weight: 600;
   text-decoration: none;
-  transition: 0.3s;
 }
 
 .feature a:hover {
@@ -135,15 +131,12 @@ header ul li a:hover {
 
 /* ========== FOOTER ========== */
 footer {
-  background: #0f172a;
-  color: #f0f2f5;
+  background: #1f1f1f;
+  color: #cfcfcf;
   text-align: center;
   padding: 25px 0;
   margin-top: 50px;
-}
-
-footer p {
-  margin: 5px 0;
+  font-size: 0.9rem;
 }
 
 /* ========== RESPONSIVE ========== */

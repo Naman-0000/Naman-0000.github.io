@@ -7,16 +7,15 @@
 }
 
 body {
-  background: #f0f2f5;
-  color: #333;
+   background: #0b0f14;   /* near-black */
+  color: #e5e7eb;
   line-height: 1.6;
 }
 
 /* ========== HEADER / NAV ========== */
 header {
-  background: #0f172a; /* dark modern navy */
-  color: #fff;
-  padding: 20px 0;
+   background: #0b0f14;
+  border-bottom: 1px solid #1f2933;
 }
 
 header nav {
@@ -52,11 +51,11 @@ header ul li a:hover {
 
 /* ========== HERO SECTION ========== */
 .hero {
-  background: linear-gradient(135deg, #3b82f6, #06b6d4); /* vibrant gradient */
+  background: linear-gradient(180deg, #0b0f14, #111827);
   color: white;
-  text-align: center;
   padding: 120px 20px;
-  border-radius: 0 0 50% 50% / 10% 10% 50% 50%;
+  border-radius: 0 0 60px 60px;
+  text-align: center;
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
@@ -75,8 +74,8 @@ header ul li a:hover {
 .btn {
   display: inline-block;
   padding: 14px 30px;
-  background: #06b6d4;
-  color: white;
+  background: #22c55e;
+  color: #0b0f14;
   border-radius: 50px;
   font-weight: 600;
   text-decoration: none;
@@ -84,8 +83,11 @@ header ul li a:hover {
 }
 
 .btn:hover {
-  background: #3b82f6;
+  background: #16a34a;
   transform: translateY(-3px);
+}
+a {
+  color: #22c55e;
 }
 
 /* ========== FEATURES / CARDS ========== */
@@ -99,11 +101,11 @@ header ul li a:hover {
 }
 
 .feature {
-  background: white;
+   background: #1f2933;   /* dark grey card */
+  color: #d1d5db;
   border-radius: 20px;
   padding: 30px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
 }
 
 .feature:hover {
@@ -134,8 +136,8 @@ header ul li a:hover {
 
 /* ========== FOOTER ========== */
 footer {
-  background: #0f172a;
-  color: #f0f2f5;
+  background: #0b0f14;
+  color: #9ca3af;
   text-align: center;
   padding: 25px 0;
   margin-top: 50px;

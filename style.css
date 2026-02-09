@@ -126,12 +126,12 @@ body {
     color: #0a2540;
 }
 
-.topic-box ul {
+.topic-box ul, .topic-box ol {
     margin-left: 20px;
 }
 
-.topic-box ul li {
-    margin-bottom: 6px;
+.topic-box ul li, .topic-box ol li {
+    margin-bottom: 8px;
 }
 
 /* ========== SYLLABUS SECTION ON HOME PAGE ========== */

@@ -52,8 +52,8 @@ header ul li a:hover {
 
 /* ========== HERO SECTION ========== */
 .hero {
-  background: linear-gradient(135deg, #3b82f6, #06b6d4); /* vibrant gradient */
-  color: white;
+  background: #0b0f14;
+  color: #9ca3af;
   text-align: center;
   padding: 120px 20px;
   border-radius: 0 0 50% 50% / 10% 10% 50% 50%;

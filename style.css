@@ -75,7 +75,7 @@ header ul li a:hover {
 .btn {
   display: inline-block;
   padding: 14px 30px;
-  background: #06b6d4;
+   background: #0f172a;
   color: white;
   border-radius: 50px;
   font-weight: 600;
@@ -84,7 +84,7 @@ header ul li a:hover {
 }
 
 .btn:hover {
-  background: #3b82f6;
+  background: #0f172a;
   transform: translateY(-3px);
 }
 

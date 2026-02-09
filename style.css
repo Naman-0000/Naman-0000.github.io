@@ -12,7 +12,7 @@ body {
   line-height: 1.6;
 }
 
-/* ========== HEADER / NAV ========== */
+/* ========== HEADER / NAVBAR ========== */
 header {
   background: #0b0f14;
   color: #9ca3af;
@@ -84,11 +84,38 @@ header ul li a:hover {
 }
 
 .btn:hover {
-  background: #0f172a;
   transform: translateY(-3px);
 }
 
-/* ========== SYLLABUS SECTION ========== */
+/* ========== EXAM STRUCTURE BLOCKS ========== */
+.exam-blocks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 1000px;
+  margin: 40px auto;
+  justify-content: center;
+}
+
+.exam-block {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  flex: 1 1 280px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.exam-block h3 {
+  margin-bottom: 12px;
+  color: #0a2540;
+}
+
+.exam-block p {
+  color: #4b5563;
+}
+
+/* ========== SYLLABUS BLOCKS ========== */
 .syllabus {
   display: flex;
   gap: 30px;
@@ -219,6 +246,54 @@ header ul li a:hover {
   text-decoration: underline;
 }
 
+/* ========== SAT MATH / MATH.HTML BLOCK STYLES ========== */
+.math-page .content-block { 
+  background: white;
+  margin: 20px auto;
+  padding: 25px 30px;
+  width: 85%;
+  max-width: 1000px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.math-page .content-block h3 {
+  margin-bottom: 15px;
+  color: #0a2540;
+}
+
+.math-page .topic-box {
+  margin-top: 20px;
+  padding: 15px;
+  border-left: 4px solid #4da3ff;
+  background: #f9fbfd;
+  border-radius: 6px;
+}
+
+.math-page .topic-box h4 {
+  margin-bottom: 10px;
+  color: #0a2540;
+}
+
+.math-page .topic-box ul, 
+.math-page .topic-box ol {
+  margin-left: 20px;
+}
+
+.math-page .topic-box ul li, 
+.math-page .topic-box ol li {
+  margin-bottom: 8px;
+}
+
+.math-page .topic-box a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.math-page .topic-box a:hover {
+  text-decoration: underline;
+}
+
 /* ========== FOOTER ========== */
 footer {
   background: #0f172a;
@@ -230,4 +305,39 @@ footer {
 }
 
 /* ========== RESPONSIVE ========== */
-@media (max-width: 768p
+@media (max-width: 768px) {
+  header nav {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .hero h2 {
+    font-size: 2.2rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .syllabus {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .resources {
+    padding: 0 10px;
+  }
+
+  .features {
+    padding: 0 10px;
+  }
+
+  .exam-blocks {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .math-page .content-block {
+    width: 95%;
+  }
+}

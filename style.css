@@ -33,4 +33,221 @@ header h1, .navbar h1 {
     letter-spacing: 1px;
 }
 
-header
+header ul, .navbar ul {
+    display: flex;
+    gap: 25px;
+    list-style: none;
+}
+
+header ul li a, .navbar ul li a {
+    color: #e0e0e0;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+header ul li a:hover, .navbar ul li a:hover {
+    color: #3b82f6;
+}
+
+/* ========== HERO / PAGE HEADERS ========== */
+.hero, .page-header {
+    background: #0b0f14;
+    color: #9ca3af;
+    text-align: center;
+    padding: 120px 20px;
+    border-radius: 0 0 50% 50% / 10% 10% 50% 50%;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    margin: 20px auto;
+    max-width: 1000px;
+}
+
+.hero h2, .page-header h2 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.hero p, .page-header p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+/* ========== BUTTONS ========== */
+.btn {
+    display: inline-block;
+    padding: 14px 30px;
+    background: #0f172a;
+    color: white;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+}
+
+/* ========== FEATURES / CARDS (HOME PAGE) ========== */
+.features {
+    max-width: 1100px;
+    margin: 60px auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    padding: 0 20px;
+}
+
+.feature {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+.feature h3 {
+    color: #0f172a;
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+}
+
+.feature p {
+    margin-bottom: 15px;
+    color: #4b5563;
+}
+
+.feature a {
+    color: #3b82f6;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.feature a:hover {
+    text-decoration: underline;
+}
+
+/* ========== SYLLABUS SECTION (HOME PAGE) ========== */
+.syllabus {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin: 30px auto;
+    max-width: 1000px;
+    flex-wrap: wrap;
+}
+
+.syllabus .column {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    flex: 1 1 250px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.syllabus h3 {
+    margin-bottom: 10px;
+}
+
+/* ========== FEEDBACK CARDS (ALL PAGES) ========== */
+.feedback-card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 15px auto;
+    max-width: 700px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.feedback-card span {
+    display: block;
+    margin-top: 10px;
+    font-weight: 600;
+    color: #0a2540;
+}
+
+/* ========== FOOTER (ALL PAGES) ========== */
+footer, .footer {
+    background: #0f172a;
+    color: #f0f2f5;
+    text-align: center;
+    padding: 25px 0;
+    margin-top: 50px;
+    font-size: 0.9rem;
+}
+
+/* ========== RESPONSIVE (ALL PAGES) ========== */
+@media (max-width: 768px) {
+    header nav, .navbar {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .hero h2, .page-header h2 {
+        font-size: 2.2rem;
+    }
+
+    .hero p, .page-header p {
+        font-size: 1rem;
+    }
+
+    .syllabus {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+/* ========== SAT MATH SPECIFIC STYLES ========== */
+.sat-math-page .content-block { 
+    background: white;
+    margin: 20px auto;
+    padding: 25px 30px;
+    width: 85%;
+    max-width: 1000px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.sat-math-page .content-block h3 {
+    margin-bottom: 15px;
+    color: #0a2540;
+}
+
+.sat-math-page .topic-box {
+    margin-top: 20px;
+    padding: 15px;
+    border-left: 4px solid #4da3ff;
+    background: #f9fbfd;
+    border-radius: 6px;
+}
+
+.sat-math-page .topic-box h4 {
+    margin-bottom: 10px;
+    color: #0a2540;
+}
+
+.sat-math-page .topic-box ul, 
+.sat-math-page .topic-box ol {
+    margin-left: 20px;
+}
+
+.sat-math-page .topic-box ul li, 
+.sat-math-page .topic-box ol li {
+    margin-bottom: 8px;
+}
+
+.sat-math-page .topic-box a {
+    color: #3b82f6;
+    text-decoration: none;
+}
+
+.sat-math-page .topic-box a:hover {
+    text-decoration: underline;
+}

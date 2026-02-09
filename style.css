@@ -13,13 +13,13 @@ body {
 }
 
 /* ========== HEADER / NAVBAR ========== */
-header {
+header, .navbar {
   background: #0b0f14;
   color: #9ca3af;
   padding: 20px 0;
 }
 
-header nav {
+header nav, .navbar ul {
   max-width: 1100px;
   margin: auto;
   display: flex;
@@ -27,27 +27,32 @@ header nav {
   align-items: center;
 }
 
-header h1 {
+header h1, .navbar h1 {
   font-size: 1.8rem;
   font-weight: 700;
   letter-spacing: 1px;
 }
 
-header ul {
+header ul, .navbar ul {
   display: flex;
   gap: 25px;
   list-style: none;
 }
 
-header ul li a {
+header ul li a, .navbar ul li a {
   color: #e0e0e0;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
-header ul li a:hover {
+header ul li a:hover, .navbar ul li a:hover {
   color: #3b82f6;
+}
+
+.navbar ul li a.active {
+  color: #3b82f6;
+  font-weight: 600;
 }
 
 /* ========== HERO SECTION ========== */
@@ -76,7 +81,7 @@ header ul li a:hover {
   display: inline-block;
   padding: 14px 30px;
   background: #0f172a;
-  color: white;
+  color: #fff;
   border-radius: 50px;
   font-weight: 600;
   text-decoration: none;
@@ -87,122 +92,47 @@ header ul li a:hover {
   transform: translateY(-3px);
 }
 
-/* ========== EXAM STRUCTURE BLOCKS ========== */
-.exam-blocks {
+/* ========== CARDS SECTION (Homepage Digital SAT / Syllabus) ========== */
+.cards-section {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
-  max-width: 1000px;
-  margin: 40px auto;
+  gap: 25px;
+  max-width: 1100px;
+  margin: 50px auto;
   justify-content: center;
+  padding: 0 20px;
 }
 
-.exam-block {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
+.cards-section .card {
+  background: #fff;
   flex: 1 1 280px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-  text-align: center;
+  padding: 25px 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.exam-block h3 {
+.cards-section .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+.cards-section .card h3 {
   margin-bottom: 12px;
   color: #0a2540;
 }
 
-.exam-block p {
+.cards-section .card p,
+.cards-section .card ul {
   color: #4b5563;
-}
-
-/* ========== SYLLABUS BLOCKS ========== */
-.syllabus {
-  display: flex;
-  gap: 30px;
-  justify-content: center;
-  margin: 50px auto;
-  max-width: 1000px;
-  flex-wrap: wrap;
-}
-
-.syllabus .column {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  flex: 1 1 250px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-}
-
-.syllabus h3 {
-  margin-bottom: 15px;
-}
-
-/* ========== RESOURCES SECTION ========== */
-.resources {
-  max-width: 1100px;
-  margin: 60px auto;
-  padding: 0 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-
-.resource-card {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-}
-
-.resource-card h3 {
-  margin-bottom: 10px;
-  color: #0a2540;
-}
-
-.resource-card p {
-  margin-bottom: 10px;
-  color: #4b5563;
-}
-
-.resource-card a {
-  color: #3b82f6;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.resource-card a:hover {
-  text-decoration: underline;
-}
-
-/* ========== FEEDBACK SECTION ========== */
-.feedback {
-  max-width: 1100px;
-  margin: 60px auto;
-  padding: 0 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.feedback-card {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-}
-
-.feedback-card p {
-  font-style: italic;
   margin-bottom: 10px;
 }
 
-.feedback-card span {
-  display: block;
-  font-weight: 600;
-  color: #0a2540;
+.cards-section .card ul li {
+  margin-bottom: 6px;
 }
 
-/* ========== FEATURES / CARDS ========== */
+/* ========== FEATURES / QUICK LINKS ========== */
 .features {
   max-width: 1100px;
   margin: 60px auto;
@@ -213,7 +143,7 @@ header ul li a:hover {
 }
 
 .feature {
-  background: white;
+  background: #fff;
   border-radius: 20px;
   padding: 30px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
@@ -246,20 +176,100 @@ header ul li a:hover {
   text-decoration: underline;
 }
 
-/* ========== SAT MATH / MATH.HTML BLOCK STYLES ========== */
-.math-page .content-block { 
-  background: white;
+/* ========== EXAM BLOCKS (Optional section) ========== */
+.exam-blocks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 1000px;
+  margin: 40px auto;
+  justify-content: center;
+}
+
+.exam-block {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  flex: 1 1 280px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.exam-block h3 {
+  margin-bottom: 12px;
+  color: #0a2540;
+}
+
+.exam-block p {
+  color: #4b5563;
+}
+
+/* ========== SYLLABUS BLOCKS (Homepage or elsewhere) ========== */
+.syllabus {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  margin: 50px auto;
+  max-width: 1000px;
+  flex-wrap: wrap;
+}
+
+.syllabus .column {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  flex: 1 1 250px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.syllabus h3 {
+  margin-bottom: 15px;
+}
+
+/* ========== RESOURCES & FEEDBACK ========== */
+.resources, .feedback {
+  max-width: 1100px;
+  margin: 60px auto;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.resource-card, .feedback-card, .content-block {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.resource-card h3, .content-block h3, .feedback-card span {
+  margin-bottom: 10px;
+  color: #0a2540;
+}
+
+.resource-card p, .content-block p, .feedback-card p {
+  color: #4b5563;
+  margin-bottom: 10px;
+}
+
+.resource-card a, .topic-box a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.resource-card a:hover, .topic-box a:hover {
+  text-decoration: underline;
+}
+
+/* ========== MATH PAGE SPECIFIC STYLES ========== */
+.math-page .content-block {
   margin: 20px auto;
   padding: 25px 30px;
   width: 85%;
   max-width: 1000px;
   border-radius: 10px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-}
-
-.math-page .content-block h3 {
-  margin-bottom: 15px;
-  color: #0a2540;
 }
 
 .math-page .topic-box {
@@ -275,23 +285,12 @@ header ul li a:hover {
   color: #0a2540;
 }
 
-.math-page .topic-box ul, 
-.math-page .topic-box ol {
+.math-page .topic-box ul, .math-page .topic-box ol {
   margin-left: 20px;
 }
 
-.math-page .topic-box ul li, 
-.math-page .topic-box ol li {
+.math-page .topic-box li {
   margin-bottom: 8px;
-}
-
-.math-page .topic-box a {
-  color: #3b82f6;
-  text-decoration: none;
-}
-
-.math-page .topic-box a:hover {
-  text-decoration: underline;
 }
 
 /* ========== FOOTER ========== */
@@ -306,7 +305,7 @@ footer {
 
 /* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
-  header nav {
+  header nav, .navbar ul {
     flex-direction: column;
     gap: 15px;
   }
@@ -319,25 +318,17 @@ footer {
     font-size: 1rem;
   }
 
-  .syllabus {
+  .syllabus, .exam-blocks {
     flex-direction: column;
     align-items: center;
   }
 
-  .resources {
+  .resources, .features {
     padding: 0 10px;
-  }
-
-  .features {
-    padding: 0 10px;
-  }
-
-  .exam-blocks {
-    flex-direction: column;
-    gap: 15px;
   }
 
   .math-page .content-block {
     width: 95%;
   }
 }
+

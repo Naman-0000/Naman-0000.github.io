@@ -270,6 +270,48 @@ nav.navbar ul li a.active {
   text-decoration: underline;
 }
 
+/* ====== QUIZ PAGE ====== */
+.btn-start {
+    background: #3b82f6;
+    color: white;
+    padding: 16px 35px;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.btn-start:hover {
+    background: #2563eb;
+    transform: translateY(-3px);
+}
+
+.quiz-duration-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.duration-btn {
+    background: #0f172a;
+    color: #fff;
+    padding: 16px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    min-width: 150px;
+    text-align: center;
+}
+
+.duration-btn:hover {
+    background: #1e293b;
+    transform: translateY(-3px);
+}
+
 /* ========== FOOTER ========== */
 footer {
   background: #0f172a;
@@ -279,6 +321,7 @@ footer {
   margin-top: 50px;
   font-size: 0.9rem;
 }
+
 
 /* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {

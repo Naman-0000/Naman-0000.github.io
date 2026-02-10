@@ -1,77 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>SAT Quiz</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>SAT Quick Quiz</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <header>
-    <nav>
-      <h1>SAT Resource Hub</h1>
-      <ul>
+<!-- NAVBAR -->
+<nav class="navbar">
+    <h1>SAT Help</h1>
+    <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="math.html">Math</a></li>
-        <li><a href="english.html">Reading & Writing</a></li>
-        <li><a href="quiz.html" class="active">Quiz</a></li>
-      </ul>
-    </nav>
-  </header>
+        <li><a href="english.html">English</a></li>
+        <li><a href="quiz.html" class="active">Quick Quiz</a></li>
+    </ul>
+</nav>
 
-  <!-- HEADER -->
-  <section class="hero">
-    <h2>SAT Quiz</h2>
-    <p>Test your skills with timed questions and get instant feedback!</p>
-  </section>
+<!-- HEADER -->
+<header class="page-header">
+    <h2>Quick SAT Quiz</h2>
+    <p>Test yourself and get instant scoring feedback.</p>
+</header>
 
-  <!-- QUIZ FORM -->
-  <section class="content-block quiz-block">
-    <form id="quizForm">
+<!-- QUIZ SELECTION -->
+<section class="content-block">
+    <h3>Choose Quiz Type</h3>
+    <button onclick="startQuiz('30min')">30 Minute Quiz</button>
+    <button onclick="startQuiz('1hr')">1 Hour Quiz</button>
+    <button onclick="startQuiz('full')">Full Practice Paper</button>
+</section>
 
-      <div class="question-box">
-        <h3>1. What is 2x + 5 = 11?</h3>
-        <input type="radio" name="q1" value="a"> x = 3<br>
-        <input type="radio" name="q1" value="b"> x = 4<br>
-        <input type="radio" name="q1" value="c"> x = 5<br>
-        <input type="radio" name="q1" value="d"> x = 6<br>
-      </div>
+<!-- QUIZ QUESTIONS -->
+<section class="content-block" id="quiz-section" style="display:none;">
+    <div id="quiz-container"></div>
+    <button onclick="submitQuiz()">Submit Quiz</button>
+</section>
 
-      <div class="question-box">
-        <h3>2. If f(x) = x², find f(3).</h3>
-        <input type="radio" name="q2" value="a"> 6<br>
-        <input type="radio" name="q2" value="b"> 9<br>
-        <input type="radio" name="q2" value="c"> 3<br>
-        <input type="radio" name="q2" value="d"> 12<br>
-      </div>
+<script>
+let currentQuizType = '';
 
-      <button type="button" onclick="checkQuiz()">Submit</button>
-    </form>
+function startQuiz(type) {
+    currentQuizType = type;
+    document.getElementById('quiz-section').style.display = 'block';
+    loadQuestions();
+}
 
-    <div id="result" class="result-box"></div>
-  </section>
+async function loadQuestions() {
+    const response = await fetch('/get_questions?type=' + currentQuizType);
+    const questions = await response.json();
 
-  <footer>
-    © 2026 SAT Resource Hub
-  </footer>
+    const container = document.getElementById('quiz-container');
+    container.innerHTML = '';
 
-  <script>
-    const answers = {
-      q1: "a",
-      q2: "b"
-    };
+    questions.forEach(q => {
+        const qDiv = document.createElement('div');
+        qDiv.className = 'topic-box';
+        qDiv.innerHTML = `
+            <p>${q.question}</p>
+            ${q.options.map(opt => `<label><input type="radio" name="q${q.id}" value="${opt}"> ${opt}</label>`).join('<br>')}
+        `;
+        container.appendChild(qDiv);
+    });
+}
 
-    function checkQuiz() {
-      let score = 0;
-      for (let q in answers) {
-        const selected = document.querySelector(`input[name="${q}"]:checked`);
-        if (selected && selected.value === answers[q]) score++;
-      }
-      const total = Object.keys(answers).length;
-      document.getElementById("result").innerHTML = `You got ${score} out of ${total} correct.`;
-    }
-  </script>
+async function submitQuiz() {
+    const container = document.getElementById('quiz-container');
+    const questions = await fetch('/get_questions?type=' + currentQuizType).then(r => r.json());
+
+    const answers = questions.map(q => {
+        const selected = container.querySelector(`input[name="q${q.id}"]:checked`);
+        return {
+            id: q.id,
+            selected: selected ? selected.value : "",
+            answer: q.answer
+        }
+    });
+
+    const result = await fetch('/submit_quiz', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(answers)
+    }).then(r => r.json());
+
+    alert(`You scored ${result.score} out of ${result.total}`);
+}
+</script>
 
 </body>
 </html>

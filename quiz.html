@@ -2,91 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SAT Quick Quiz</title>
+    <title>Quiz – SAT Resource Hub</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar">
-    <h1>SAT Help</h1>
-    <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="math.html">Math</a></li>
-        <li><a href="english.html">English</a></li>
-        <li><a href="quiz.html" class="active">Quick Quiz</a></li>
-    </ul>
-</nav>
+    <!-- NAVBAR -->
+    <header>
+        <nav>
+            <h1>SAT Resource Hub</h1>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="math.html">Math</a></li>
+                <li><a href="english.html">English</a></li>
+                <li><a href="quiz.html" class="active">Quiz</a></li>
+            </ul>
+        </nav>
+    </header>
 
-<!-- HEADER -->
-<header class="page-header">
-    <h2>Quick SAT Quiz</h2>
-    <p>Test yourself and get instant scoring feedback.</p>
-</header>
+    <!-- HERO -->
+    <section class="hero">
+        <h2>Ready for a SAT Quiz?</h2>
+        <p>Test your skills under real SAT conditions. Pick your quiz duration and get started!</p>
+        <a href="#choose-duration" class="btn btn-start">Start Quiz →</a>
+    </section>
 
-<!-- QUIZ SELECTION -->
-<section class="content-block">
-    <h3>Choose Quiz Type</h3>
-    <button onclick="startQuiz('30min')">30 Minute Quiz</button>
-    <button onclick="startQuiz('1hr')">1 Hour Quiz</button>
-    <button onclick="startQuiz('full')">Full Practice Paper</button>
-</section>
+    <!-- CHOOSE DURATION -->
+    <section id="choose-duration" class="content-block">
+        <h3>Choose Your Quiz Duration</h3>
+        <div class="quiz-duration-buttons">
+            <a href="/start-quiz/30" class="btn duration-btn">30 Minutes</a>
+            <a href="/start-quiz/60" class="btn duration-btn">60 Minutes</a>
+            <a href="/start-quiz/120" class="btn duration-btn">2 Hours</a>
+        </div>
+        <p style="margin-top:15px; color:#555; font-size:0.95rem;">
+            Once you select a duration, the quiz will start immediately with the timer on the right-hand side.
+        </p>
+    </section>
 
-<!-- QUIZ QUESTIONS -->
-<section class="content-block" id="quiz-section" style="display:none;">
-    <div id="quiz-container"></div>
-    <button onclick="submitQuiz()">Submit Quiz</button>
-</section>
-
-<script>
-let currentQuizType = '';
-
-function startQuiz(type) {
-    currentQuizType = type;
-    document.getElementById('quiz-section').style.display = 'block';
-    loadQuestions();
-}
-
-async function loadQuestions() {
-    const response = await fetch('/get_questions?type=' + currentQuizType);
-    const questions = await response.json();
-
-    const container = document.getElementById('quiz-container');
-    container.innerHTML = '';
-
-    questions.forEach(q => {
-        const qDiv = document.createElement('div');
-        qDiv.className = 'topic-box';
-        qDiv.innerHTML = `
-            <p>${q.question}</p>
-            ${q.options.map(opt => `<label><input type="radio" name="q${q.id}" value="${opt}"> ${opt}</label>`).join('<br>')}
-        `;
-        container.appendChild(qDiv);
-    });
-}
-
-async function submitQuiz() {
-    const container = document.getElementById('quiz-container');
-    const questions = await fetch('/get_questions?type=' + currentQuizType).then(r => r.json());
-
-    const answers = questions.map(q => {
-        const selected = container.querySelector(`input[name="q${q.id}"]:checked`);
-        return {
-            id: q.id,
-            selected: selected ? selected.value : "",
-            answer: q.answer
-        }
-    });
-
-    const result = await fetch('/submit_quiz', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify(answers)
-    }).then(r => r.json());
-
-    alert(`You scored ${result.score} out of ${result.total}`);
-}
-</script>
+    <footer>
+        © 2026 SAT Resource Hub | Digital SAT Made Simple
+    </footer>
 
 </body>
 </html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="results-container">
+    <h2>Your Score: {{ total_score }} / {{ total_questions }}</h2>
+    <h3>Percentage: {{ (total_score / total_questions * 100)|round(2) }}%</h3>
+
+    {% for r in results %}
+    <div class="result-box {% if r.is_correct %}correct{% else %}wrong{% endif %}">
+        <p><strong>{{ r.question }}</strong></p>
+        <p>Your Answer: {{ r.user_answer }}</p>
+        {% if not r.is_correct %}
+        <p>Correct Answer: {{ r.correct_answer }}</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+
+<div class="results-footer" style="text-align:center; margin-top: 30px;">
+    <a href="{{ url_for('home') }}" class="btn">Back to Home</a>
+</div>
+
+</body>
+</html>

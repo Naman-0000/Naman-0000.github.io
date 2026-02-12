@@ -23,6 +23,11 @@ math_questions = [
     {"question": "What is √81?", "options": ["9", "-9", "81", "8"], "answer": "9"},
     {"question": "If 5x = 45, x = ?", "options": ["9", "8", "10", "5"], "answer": "9"},
     {"question": "Solve: x² - 9 = 0", "options": ["3", "-3", "3 and -3", "0"], "answer": "3 and -3"},
+    # ---- EXTRA QUESTIONS ----
+    {"question": "If 2x + 3 = 11, find x.", "options": ["4", "3", "5", "6"], "answer": "4"},
+    {"question": "What is the area of a circle with radius 3?", "options": ["9π", "6π", "3π", "12π"], "answer": "9π"},
+    {"question": "Simplify: 5(x + 2) - 3x", "options": ["2x + 10", "2x + 5", "8x + 10", "5x - 6"], "answer": "2x + 10"},
+    {"question": "What is 15% of 200?", "options": ["30", "25", "35", "40"], "answer": "30"},
 ]
 
 english_questions = [
@@ -67,10 +72,16 @@ english_questions = [
     {"question": "Correct comparison: She is ___ than her sister.",
      "options": ["more taller", "taller", "most tall", "more tall"],
      "answer": "taller"},
+    # ---- EXTRA QUESTIONS ----
+    {"question": "Identify the passive voice: 'The book was read by John.'",
+     "options": ["Active", "Passive", "Neither", "Both"], "answer": "Passive"},
+    {"question": "Choose the correct spelling:",
+     "options": ["Definately", "Definitely", "Definatly", "Definetely"], "answer": "Definitely"},
+    {"question": "Pick the correct article: 'I saw ___ elephant at the zoo.'",
+     "options": ["a", "an", "the", "no article"], "answer": "an"},
 ]
 
 # ---------------- ROUTES ---------------- #
-
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -93,7 +104,6 @@ def quiz_options():
 
 @app.route("/start-quiz/<int:duration>", methods=["GET", "POST"])
 def start_quiz(duration):
-
     num_questions = 7 if duration == 30 else 12
     selected_math = random.sample(math_questions, num_questions)
     selected_english = random.sample(english_questions, num_questions)
@@ -127,13 +137,11 @@ def start_quiz(duration):
                            duration=duration)
 
 # ---------------- Hugging Face AI ---------------- #
-
-HF_TOKEN = os.environ.get("HF_TOKEN")  # must be set in Render or locally
+HF_TOKEN = os.environ.get("HF_TOKEN")
 
 @app.route("/ask-ai", methods=["POST"])
 def ask_ai():
-    user_input = request.json.get("message")  # match frontend
-
+    user_input = request.json.get("message")
     if not user_input:
         return jsonify({"reply": "Please send a message."})
 
@@ -142,7 +150,7 @@ def ask_ai():
 
     try:
         response = requests.post(
-            "https://api-inference.huggingface.co/models/gpt2",  # or another conversational model
+            "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium",
             headers=headers,
             json=payload,
             timeout=30
@@ -154,7 +162,5 @@ def ask_ai():
     return jsonify({"reply": generated_text})
 
 # ---------------- RUN ---------------- #
-
 if __name__ == "__main__":
     app.run(debug=True)
-

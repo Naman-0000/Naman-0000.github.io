@@ -137,5 +137,45 @@ async function askAI() {
 }
 </script>
 
+  <!-- Floating AI Chat Button -->
+<div id="ai-chat-button" style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    line-height: 60px;
+    font-size: 30px;
+    cursor: pointer;
+    z-index: 1000;
+">🤖</div>
+
+<!-- Chat Window (hidden by default) -->
+<div id="ai-chat-window" style="
+    display: none;
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    border: 2px solid #4CAF50;
+    border-radius: 10px;
+    background-color: white;
+    z-index: 1001;
+    flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+">
+    <div id="ai-chat-header" style="background-color:#4CAF50; color:white; padding:10px; text-align:center; border-radius:10px 10px 0 0;">
+        Chat with AI
+    </div>
+    <div id="ai-chat-messages" style="padding:10px; overflow-y:auto; flex:1;"></div>
+    <input id="ai-chat-input" type="text" placeholder="Type a message..." style="width: calc(100% - 20px); margin:10px; padding:5px;">
+</div>
+
+
 </body>
 </html>

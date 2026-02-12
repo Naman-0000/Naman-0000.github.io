@@ -110,6 +110,32 @@
   <footer>
     © 2026 SAT Resource Hub | Digital SAT Made Simple
   </footer>
+<div style="position: fixed; bottom: 20px; right: 20px; width: 300px; background: white; border: 1px solid #ccc; padding: 10px; border-radius: 10px;">
+    <h4>Ask AI</h4>
+    <input type="text" id="aiInput" placeholder="Ask a question..." style="width: 100%; padding: 5px;">
+    <button onclick="askAI()" style="margin-top: 5px;">Ask</button>
+    <div id="aiResponse" style="margin-top: 10px; font-size: 14px;"></div>
+</div>
+
+<script>
+async function askAI() {
+    const input = document.getElementById("aiInput").value;
+    const responseDiv = document.getElementById("aiResponse");
+
+    responseDiv.innerHTML = "Thinking...";
+
+    const res = await fetch("/ask-ai", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ prompt: input })
+    });
+
+    const data = await res.json();
+    responseDiv.innerHTML = data.response || "Error.";
+}
+</script>
 
 </body>
 </html>

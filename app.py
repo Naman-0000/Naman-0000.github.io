@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import random
+import os
+import requests
 
 app = Flask(__name__)
 
@@ -131,6 +133,27 @@ def start_quiz(duration):
                            math_questions=selected_math,
                            english_questions=selected_english,
                            duration=duration)
+
+# ---------------- Hugging Face AI ---------------- #
+
+HF_TOKEN = os.environ.get("HF_TOKEN")  # <--- token from environment variable
+
+@app.route("/ask-ai", methods=["POST"])
+def ask_ai():
+    user_input = request.json.get("question")  # frontend sends JSON with key "question"
+    headers = {"Authorization": f"Bearer {HF_TOKEN}"}
+    payload = {"inputs": user_input}
+    response = requests.post(
+        "https://api-inference.huggingface.co/models/gpt2",  # you can choose a different model
+        headers=headers,
+        json=payload
+    )
+    try:
+        answer = response.json()
+    except:
+        answer = {"error": "Failed to get response from Hugging Face."}
+
+    return jsonify(answer)
 
 if __name__ == "__main__":
     app.run(debug=True)

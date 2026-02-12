@@ -94,11 +94,7 @@ def quiz_options():
 @app.route("/start-quiz/<int:duration>", methods=["GET", "POST"])
 def start_quiz(duration):
 
-    if duration == 30:
-        num_questions = 7
-    else:
-        num_questions = 12
-
+    num_questions = 7 if duration == 30 else 12
     selected_math = random.sample(math_questions, num_questions)
     selected_english = random.sample(english_questions, num_questions)
 
@@ -108,21 +104,17 @@ def start_quiz(duration):
 
         for i, q in enumerate(selected_math, start=1):
             user_ans = request.form.get(f"math_{i}")
-            correct = q["answer"]
-            is_correct = user_ans == correct
-            if is_correct:
-                total_score += 1
+            is_correct = user_ans == q["answer"]
+            if is_correct: total_score += 1
             results.append({"question": q["question"], "user_answer": user_ans,
-                            "correct_answer": correct, "is_correct": is_correct})
+                            "correct_answer": q["answer"], "is_correct": is_correct})
 
         for i, q in enumerate(selected_english, start=1):
             user_ans = request.form.get(f"eng_{i}")
-            correct = q["answer"]
-            is_correct = user_ans == correct
-            if is_correct:
-                total_score += 1
+            is_correct = user_ans == q["answer"]
+            if is_correct: total_score += 1
             results.append({"question": q["question"], "user_answer": user_ans,
-                            "correct_answer": correct, "is_correct": is_correct})
+                            "correct_answer": q["answer"], "is_correct": is_correct})
 
         return render_template("quiz-results.html",
                                results=results,
@@ -136,24 +128,33 @@ def start_quiz(duration):
 
 # ---------------- Hugging Face AI ---------------- #
 
-HF_TOKEN = os.environ.get("HF_TOKEN")  # <--- token from environment variable
+HF_TOKEN = os.environ.get("HF_TOKEN")  # must be set in Render or locally
 
 @app.route("/ask-ai", methods=["POST"])
 def ask_ai():
-    user_input = request.json.get("question")  # frontend sends JSON with key "question"
+    user_input = request.json.get("message")  # match frontend
+
+    if not user_input:
+        return jsonify({"reply": "Please send a message."})
+
     headers = {"Authorization": f"Bearer {HF_TOKEN}"}
     payload = {"inputs": user_input}
-    response = requests.post(
-        "https://api-inference.huggingface.co/models/gpt2",  # you can choose a different model
-        headers=headers,
-        json=payload
-    )
-    try:
-        answer = response.json()
-    except:
-        answer = {"error": "Failed to get response from Hugging Face."}
 
-    return jsonify(answer)
+    try:
+        response = requests.post(
+            "https://api-inference.huggingface.co/models/gpt2",  # or another conversational model
+            headers=headers,
+            json=payload,
+            timeout=30
+        )
+        generated_text = response.json()[0]["generated_text"]
+    except Exception as e:
+        generated_text = f"Error: Could not get response from AI. ({e})"
+
+    return jsonify({"reply": generated_text})
+
+# ---------------- RUN ---------------- #
 
 if __name__ == "__main__":
     app.run(debug=True)
+

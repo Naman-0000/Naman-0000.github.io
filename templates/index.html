@@ -112,7 +112,7 @@
     © 2026 SAT Resource Hub | Digital SAT Made Simple
   </footer>
 
-  <!-- Floating AI Chat Button -->
+  <!-- ================== Floating AI Chat Button ================== -->
   <div id="ai-chat-button" style="
       position: fixed;
       bottom: 20px;
@@ -120,7 +120,7 @@
       width: 60px;
       height: 60px;
       border-radius: 50%;
-      background-color: #4CAF50;
+      background-color: #800080;  /* Purple */
       color: white;
       text-align: center;
       line-height: 60px;
@@ -137,14 +137,14 @@
       right: 20px;
       width: 300px;
       height: 400px;
-      border: 2px solid #4CAF50;
+      border: 2px solid #800080;  /* Purple border */
       border-radius: 10px;
       background-color: white;
       z-index: 1001;
       flex-direction: column;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   ">
-      <div id="ai-chat-header" style="background-color:#4CAF50; color:white; padding:10px; text-align:center; border-radius:10px 10px 0 0;">
+      <div id="ai-chat-header" style="background-color:#800080; color:white; padding:10px; text-align:center; border-radius:10px 10px 0 0;">
           Chat with AI
       </div>
       <div id="ai-chat-messages" style="padding:10px; overflow-y:auto; flex:1;"></div>
@@ -157,12 +157,13 @@ const chatWindow = document.getElementById('ai-chat-window');
 const chatInput = document.getElementById('ai-chat-input');
 const chatMessages = document.getElementById('ai-chat-messages');
 
+// Toggle chat window
 chatButton.addEventListener('click', () => {
     chatWindow.style.display = chatWindow.style.display === 'flex' ? 'none' : 'flex';
     chatWindow.style.flexDirection = 'column';
 });
 
-// Sending a message
+// Send message on Enter
 chatInput.addEventListener('keypress', function(e) {
     if(e.key === 'Enter' && chatInput.value.trim() !== '') {
         const msg = chatInput.value;
@@ -172,11 +173,11 @@ chatInput.addEventListener('keypress', function(e) {
         chatMessages.appendChild(userMsgDiv);
         chatInput.value = '';
 
-        // Send message to backend
+        // Fetch AI response
         fetch("/ask-ai", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message: msg }) // standard key
+            body: JSON.stringify({ message: msg })
         })
         .then(res => res.json())
         .then(data => {

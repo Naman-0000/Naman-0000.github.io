@@ -6,8 +6,7 @@ import requests
 app = Flask(__name__)
 
 # ---------------- SAT LEVEL QUESTION BANK ---------------- #
-# Full original questions plus a few extras
-
+# (Math and English questions — I kept your original questions)
 math_questions = [
     {"question": "Solve for x: 3x - 5 = 16", "options": ["7", "5", "3", "9"], "answer": "7"},
     {"question": "If x² = 49, what are the values of x?", "options": ["7", "-7", "7 and -7", "0"], "answer": "7 and -7"},
@@ -24,11 +23,6 @@ math_questions = [
     {"question": "What is √81?", "options": ["9", "-9", "81", "8"], "answer": "9"},
     {"question": "If 5x = 45, x = ?", "options": ["9", "8", "10", "5"], "answer": "9"},
     {"question": "Solve: x² - 9 = 0", "options": ["3", "-3", "3 and -3", "0"], "answer": "3 and -3"},
-    # Extra questions
-    {"question": "If 2x + 3 = 11, find x.", "options": ["4", "3", "5", "6"], "answer": "4"},
-    {"question": "What is the area of a circle with radius 3?", "options": ["9π", "6π", "3π", "12π"], "answer": "9π"},
-    {"question": "Simplify: 5(x + 2) - 3x", "options": ["2x + 10", "2x + 5", "8x + 10", "5x - 6"], "answer": "2x + 10"},
-    {"question": "What is 15% of 200?", "options": ["30", "25", "35", "40"], "answer": "30"},
 ]
 
 english_questions = [
@@ -73,16 +67,10 @@ english_questions = [
     {"question": "Correct comparison: She is ___ than her sister.",
      "options": ["more taller", "taller", "most tall", "more tall"],
      "answer": "taller"},
-    # Extra questions
-    {"question": "Identify the passive voice: 'The book was read by John.'",
-     "options": ["Active", "Passive", "Neither", "Both"], "answer": "Passive"},
-    {"question": "Choose the correct spelling:",
-     "options": ["Definately", "Definitely", "Definatly", "Definetely"], "answer": "Definitely"},
-    {"question": "Pick the correct article: 'I saw ___ elephant at the zoo.'",
-     "options": ["a", "an", "the", "no article"], "answer": "an"},
 ]
 
 # ---------------- ROUTES ---------------- #
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -105,7 +93,9 @@ def quiz_options():
 
 @app.route("/start-quiz/<int:duration>", methods=["GET", "POST"])
 def start_quiz(duration):
+
     num_questions = 7 if duration == 30 else 12
+
     selected_math = random.sample(math_questions, num_questions)
     selected_english = random.sample(english_questions, num_questions)
 
@@ -137,35 +127,36 @@ def start_quiz(duration):
                            english_questions=selected_english,
                            duration=duration)
 
-# ---------------- Hugging Face AI ---------------- #
+
+# ---------------- Hugging Face AI (Router v1) ---------------- #
+
 HF_TOKEN = os.environ.get("HF_TOKEN")
 
 @app.route("/ask-ai", methods=["POST"])
 def ask_ai():
-    user_input = request.json.get("message")
-    if not user_input:
-        return jsonify({"reply": "Please send a message."})
-
+    user_input = request.json.get("message")  # matches your frontend
     headers = {"Authorization": f"Bearer {HF_TOKEN}"}
-    payload = {"inputs": user_input, "parameters": {"max_new_tokens": 50}}
-
+    
+    payload = {
+        "model": "gpt-4",  # modern GPT model
+        "input": user_input
+    }
+    
     try:
         response = requests.post(
-            "https://api-inference.huggingface.co/models/EleutherAI/gpt-neo-125M",
+            "https://api-inference.huggingface.co/route/v1/completions",
             headers=headers,
             json=payload,
             timeout=30
         )
         data = response.json()
-        if isinstance(data, dict) and data.get("error"):
-            generated_text = f"Error: {data['error']}"
-        else:
-            generated_text = data[0]["generated_text"]
+        # Hugging Face returns completion in data['completions'][0]['data']['text']
+        ai_reply = data.get("completions", [{}])[0].get("data", {}).get("text", "Error: No response from AI.")
     except Exception as e:
-        generated_text = f"Error: Could not get response from AI. ({e})"
+        ai_reply = f"Error: Could not get response from AI. ({str(e)})"
 
-    return jsonify({"reply": generated_text})
+    return jsonify({"reply": ai_reply})
 
-# ---------------- RUN ---------------- #
+
 if __name__ == "__main__":
     app.run(debug=True)

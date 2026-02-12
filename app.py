@@ -6,6 +6,7 @@ import requests
 app = Flask(__name__)
 
 # ---------------- SAT LEVEL QUESTION BANK ---------------- #
+# Full original questions plus a few extras
 
 math_questions = [
     {"question": "Solve for x: 3x - 5 = 16", "options": ["7", "5", "3", "9"], "answer": "7"},
@@ -23,7 +24,7 @@ math_questions = [
     {"question": "What is √81?", "options": ["9", "-9", "81", "8"], "answer": "9"},
     {"question": "If 5x = 45, x = ?", "options": ["9", "8", "10", "5"], "answer": "9"},
     {"question": "Solve: x² - 9 = 0", "options": ["3", "-3", "3 and -3", "0"], "answer": "3 and -3"},
-    # ---- EXTRA QUESTIONS ----
+    # Extra questions
     {"question": "If 2x + 3 = 11, find x.", "options": ["4", "3", "5", "6"], "answer": "4"},
     {"question": "What is the area of a circle with radius 3?", "options": ["9π", "6π", "3π", "12π"], "answer": "9π"},
     {"question": "Simplify: 5(x + 2) - 3x", "options": ["2x + 10", "2x + 5", "8x + 10", "5x - 6"], "answer": "2x + 10"},
@@ -72,7 +73,7 @@ english_questions = [
     {"question": "Correct comparison: She is ___ than her sister.",
      "options": ["more taller", "taller", "most tall", "more tall"],
      "answer": "taller"},
-    # ---- EXTRA QUESTIONS ----
+    # Extra questions
     {"question": "Identify the passive voice: 'The book was read by John.'",
      "options": ["Active", "Passive", "Neither", "Both"], "answer": "Passive"},
     {"question": "Choose the correct spelling:",
@@ -146,16 +147,20 @@ def ask_ai():
         return jsonify({"reply": "Please send a message."})
 
     headers = {"Authorization": f"Bearer {HF_TOKEN}"}
-    payload = {"inputs": user_input}
+    payload = {"inputs": user_input, "parameters": {"max_new_tokens": 50}}
 
     try:
         response = requests.post(
-            "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium",
+            "https://api-inference.huggingface.co/models/EleutherAI/gpt-neo-125M",
             headers=headers,
             json=payload,
             timeout=30
         )
-        generated_text = response.json()[0]["generated_text"]
+        data = response.json()
+        if isinstance(data, dict) and data.get("error"):
+            generated_text = f"Error: {data['error']}"
+        else:
+            generated_text = data[0]["generated_text"]
     except Exception as e:
         generated_text = f"Error: Could not get response from AI. ({e})"
 

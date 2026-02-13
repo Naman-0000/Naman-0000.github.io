@@ -5,8 +5,10 @@ import requests
 
 app = Flask(__name__)
 
-# ---------------- SAT LEVEL QUESTION BANK ---------------- #
-# (Math and English questions — I kept your original questions)
+# ==========================
+# SAT QUESTION BANK
+# ==========================
+
 math_questions = [
     {"question": "Solve for x: 3x - 5 = 16", "options": ["7", "5", "3", "9"], "answer": "7"},
     {"question": "If x² = 49, what are the values of x?", "options": ["7", "-7", "7 and -7", "0"], "answer": "7 and -7"},
@@ -18,58 +20,29 @@ math_questions = [
     {"question": "Solve: x/4 = 5", "options": ["20", "9", "25", "10"], "answer": "20"},
     {"question": "Mean of 2, 4, 6, 8?", "options": ["5", "6", "4", "8"], "answer": "5"},
     {"question": "If a = 3, b = 4, find a² + b².", "options": ["25", "7", "12", "49"], "answer": "25"},
-    {"question": "Solve: 2x² = 18", "options": ["3", "-3", "3 and -3", "9"], "answer": "3 and -3"},
-    {"question": "Perimeter of square with side 5?", "options": ["20", "25", "15", "10"], "answer": "20"},
-    {"question": "What is √81?", "options": ["9", "-9", "81", "8"], "answer": "9"},
-    {"question": "If 5x = 45, x = ?", "options": ["9", "8", "10", "5"], "answer": "9"},
-    {"question": "Solve: x² - 9 = 0", "options": ["3", "-3", "3 and -3", "0"], "answer": "3 and -3"},
 ]
 
 english_questions = [
-    {"question": "Choose the correct sentence.", 
+    {"question": "Choose the correct sentence.",
      "options": ["She go to school.", "She goes to school.", "She going school.", "She gone school."],
      "answer": "She goes to school."},
-    {"question": "Synonym of 'meticulous'?", 
-     "options": ["Careless", "Precise", "Lazy", "Rough"], "answer": "Precise"},
-    {"question": "Correct punctuation: 'Its raining heavily'", 
+    {"question": "Synonym of 'meticulous'?",
+     "options": ["Careless", "Precise", "Lazy", "Rough"],
+     "answer": "Precise"},
+    {"question": "Correct punctuation: 'Its raining heavily'",
      "options": ["It's raining heavily.", "Its raining heavily.", "Its raining heavily!", "Its raining heavily,"],
      "answer": "It's raining heavily."},
-    {"question": "Main idea of passage refers to:", 
-     "options": ["Minor detail", "Central argument", "Example", "Footnote"], "answer": "Central argument"},
-    {"question": "Fill blank: He ___ to the store yesterday.", 
-     "options": ["go", "went", "gone", "going"], "answer": "went"},
-    {"question": "Antonym of 'expand'?", 
-     "options": ["Grow", "Increase", "Shrink", "Stretch"], "answer": "Shrink"},
-    {"question": "Choose grammatically correct:", 
-     "options": ["Between you and I", "Between you and me", "Between I and you", "Me and you between"],
-     "answer": "Between you and me"},
-    {"question": "Tone of persuasive essay is usually:", 
-     "options": ["Neutral", "Convincing", "Sarcastic", "Informal"],
-     "answer": "Convincing"},
-    {"question": "Correct word: Their / There / They're going home.",
-     "options": ["Their", "There", "They're", "None"],
-     "answer": "They're"},
-    {"question": "What is a thesis statement?",
-     "options": ["Title", "Main argument", "Conclusion", "Example"],
-     "answer": "Main argument"},
-    {"question": "Correct: Each student must bring ___ book.",
-     "options": ["their", "his or her", "they", "them"],
-     "answer": "his or her"},
-    {"question": "Meaning of 'ambiguous'?",
-     "options": ["Clear", "Uncertain", "Definite", "Certain"],
-     "answer": "Uncertain"},
-    {"question": "Correct punctuation: 'Wow that was amazing'",
-     "options": ["Wow that was amazing.", "Wow, that was amazing!", "Wow that was amazing!", "Wow that was amazing?"],
-     "answer": "Wow, that was amazing!"},
-    {"question": "What does context help determine?",
-     "options": ["Word meaning", "Font size", "Page number", "Grammar rules"],
-     "answer": "Word meaning"},
-    {"question": "Correct comparison: She is ___ than her sister.",
-     "options": ["more taller", "taller", "most tall", "more tall"],
-     "answer": "taller"},
+    {"question": "Fill blank: He ___ to the store yesterday.",
+     "options": ["go", "went", "gone", "going"],
+     "answer": "went"},
+    {"question": "Antonym of 'expand'?",
+     "options": ["Grow", "Increase", "Shrink", "Stretch"],
+     "answer": "Shrink"},
 ]
 
-# ---------------- ROUTES ---------------- #
+# ==========================
+# ROUTES
+# ==========================
 
 @app.route("/")
 def home():
@@ -94,10 +67,10 @@ def quiz_options():
 @app.route("/start-quiz/<int:duration>", methods=["GET", "POST"])
 def start_quiz(duration):
 
-    num_questions = 7 if duration == 30 else 12
+    num_questions = 5 if duration == 30 else 8
 
-    selected_math = random.sample(math_questions, num_questions)
-    selected_english = random.sample(english_questions, num_questions)
+    selected_math = random.sample(math_questions, min(num_questions, len(math_questions)))
+    selected_english = random.sample(english_questions, min(num_questions, len(english_questions)))
 
     if request.method == "POST":
         results = []
@@ -106,57 +79,83 @@ def start_quiz(duration):
         for i, q in enumerate(selected_math, start=1):
             user_ans = request.form.get(f"math_{i}")
             is_correct = user_ans == q["answer"]
-            if is_correct: total_score += 1
-            results.append({"question": q["question"], "user_answer": user_ans,
-                            "correct_answer": q["answer"], "is_correct": is_correct})
+            if is_correct:
+                total_score += 1
+            results.append({
+                "question": q["question"],
+                "user_answer": user_ans,
+                "correct_answer": q["answer"],
+                "is_correct": is_correct
+            })
 
         for i, q in enumerate(selected_english, start=1):
             user_ans = request.form.get(f"eng_{i}")
             is_correct = user_ans == q["answer"]
-            if is_correct: total_score += 1
-            results.append({"question": q["question"], "user_answer": user_ans,
-                            "correct_answer": q["answer"], "is_correct": is_correct})
+            if is_correct:
+                total_score += 1
+            results.append({
+                "question": q["question"],
+                "user_answer": user_ans,
+                "correct_answer": q["answer"],
+                "is_correct": is_correct
+            })
 
-        return render_template("quiz-results.html",
-                               results=results,
-                               total_score=total_score,
-                               total_questions=len(results))
+        return render_template(
+            "quiz-results.html",
+            results=results,
+            total_score=total_score,
+            total_questions=len(results)
+        )
 
-    return render_template("start-quiz.html",
-                           math_questions=selected_math,
-                           english_questions=selected_english,
-                           duration=duration)
+    return render_template(
+        "start-quiz.html",
+        math_questions=selected_math,
+        english_questions=selected_english,
+        duration=duration
+    )
 
-
-# ---------------- Hugging Face AI (Router v1) ---------------- #
+# ==========================
+# AI CHAT (WORKING VERSION)
+# ==========================
 
 HF_TOKEN = os.environ.get("HF_TOKEN")
 
 @app.route("/ask-ai", methods=["POST"])
 def ask_ai():
-    user_input = request.json.get("message")  # matches your frontend
-    headers = {"Authorization": f"Bearer {HF_TOKEN}"}
-    
-    payload = {
-        "model": "gpt-4",  # modern GPT model
-        "input": user_input
+    user_input = request.json.get("message")
+
+    API_URL = "https://api-inference.huggingface.co/models/microsoft/DialoGPT-small"
+
+    headers = {
+        "Authorization": f"Bearer {HF_TOKEN}"
     }
-    
+
+    payload = {
+        "inputs": user_input,
+        "parameters": {
+            "max_new_tokens": 60,
+            "temperature": 0.7
+        }
+    }
+
     try:
-        response = requests.post(
-            "https://api-inference.huggingface.co/route/v1/completions",
-            headers=headers,
-            json=payload,
-            timeout=30
-        )
+        response = requests.post(API_URL, headers=headers, json=payload, timeout=30)
         data = response.json()
-        # Hugging Face returns completion in data['completions'][0]['data']['text']
-        ai_reply = data.get("completions", [{}])[0].get("data", {}).get("text", "Error: No response from AI.")
+
+        if isinstance(data, dict) and data.get("error"):
+            return jsonify({"reply": f"Error: {data['error']}"})
+
+        reply = data[0]["generated_text"]
+
     except Exception as e:
-        ai_reply = f"Error: Could not get response from AI. ({str(e)})"
+        return jsonify({"reply": f"Error: {str(e)}"})
 
-    return jsonify({"reply": ai_reply})
+    return jsonify({"reply": reply})
 
+
+# ==========================
+# RUN
+# ==========================
 
 if __name__ == "__main__":
     app.run(debug=True)

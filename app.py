@@ -1,7 +1,5 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request
 import random
-import os
-import requests
 
 app = Flask(__name__)
 
@@ -10,15 +8,11 @@ app = Flask(__name__)
 # ==========================
 
 math_questions = [
-
-    # Original style questions
     {"question": "Solve for x: 3x - 5 = 16", "options": ["7", "5", "3", "9"], "answer": "7"},
     {"question": "If x² = 49, what are the values of x?", "options": ["7", "-7", "7 and -7", "0"], "answer": "7 and -7"},
     {"question": "What is the slope of y = 4x + 2?", "options": ["4", "2", "-4", "0"], "answer": "4"},
     {"question": "Simplify: (x + 2)(x - 2)", "options": ["x² - 4", "x² + 4", "x² - 2", "x² + 2"], "answer": "x² - 4"},
     {"question": "What is 30% of 250?", "options": ["75", "60", "80", "90"], "answer": "75"},
-
-    # 10+ New Questions
     {"question": "Solve for x: 2x + 9 = 21", "options": ["6", "5", "7", "8"], "answer": "6"},
     {"question": "What is the value of 5² + 3?", "options": ["28", "25", "23", "30"], "answer": "28"},
     {"question": "If 4x = 36, what is x?", "options": ["8", "9", "7", "6"], "answer": "9"},
@@ -32,59 +26,19 @@ math_questions = [
 ]
 
 english_questions = [
-
-    {"question": "Choose the correct sentence.",
-     "options": ["She go to school.", "She goes to school.", "She going school.", "She gone school."],
-     "answer": "She goes to school."},
-
-    {"question": "Synonym of 'meticulous'?",
-     "options": ["Careless", "Precise", "Lazy", "Rough"],
-     "answer": "Precise"},
-
-    {"question": "Fill blank: He ___ to the store yesterday.",
-     "options": ["go", "went", "gone", "going"],
-     "answer": "went"},
-
-    # 10+ New Questions
-    {"question": "Choose the correct sentence.",
-     "options": ["They was late.", "They were late.", "They is late.", "They be late."],
-     "answer": "They were late."},
-
-    {"question": "Synonym of 'abundant'?",
-     "options": ["Scarce", "Plentiful", "Tiny", "Weak"],
-     "answer": "Plentiful"},
-
-    {"question": "Fill in the blank: She has lived here ___ 2019.",
-     "options": ["since", "for", "from", "by"],
-     "answer": "since"},
-
-    {"question": "Antonym of 'optimistic'?",
-     "options": ["Hopeful", "Cheerful", "Pessimistic", "Excited"],
-     "answer": "Pessimistic"},
-
-    {"question": "Choose the correct word: Their / There / They're going home.",
-     "options": ["Their", "There", "They're", "None"],
-     "answer": "They're"},
-
-    {"question": "Fill blank: The book is ___ the table.",
-     "options": ["on", "in", "at", "by"],
-     "answer": "on"},
-
-    {"question": "Meaning of 'inevitable'?",
-     "options": ["Avoidable", "Uncertain", "Certain to happen", "Rare"],
-     "answer": "Certain to happen"},
-
-    {"question": "Choose the grammatically correct sentence.",
-     "options": ["Me and him went.", "He and I went.", "Him and me went.", "I and he gone."],
-     "answer": "He and I went."},
-
-    {"question": "Synonym of 'rapid'?",
-     "options": ["Slow", "Fast", "Weak", "Heavy"],
-     "answer": "Fast"},
-
-    {"question": "Fill blank: She is better ___ math than science.",
-     "options": ["in", "at", "on", "with"],
-     "answer": "at"},
+    {"question": "Choose the correct sentence.", "options": ["She go to school.", "She goes to school.", "She going school.", "She gone school."], "answer": "She goes to school."},
+    {"question": "Synonym of 'meticulous'?", "options": ["Careless", "Precise", "Lazy", "Rough"], "answer": "Precise"},
+    {"question": "Fill blank: He ___ to the store yesterday.", "options": ["go", "went", "gone", "going"], "answer": "went"},
+    {"question": "Choose the correct sentence.", "options": ["They was late.", "They were late.", "They is late.", "They be late."], "answer": "They were late."},
+    {"question": "Synonym of 'abundant'?", "options": ["Scarce", "Plentiful", "Tiny", "Weak"], "answer": "Plentiful"},
+    {"question": "Fill in the blank: She has lived here ___ 2019.", "options": ["since", "for", "from", "by"], "answer": "since"},
+    {"question": "Antonym of 'optimistic'?", "options": ["Hopeful", "Cheerful", "Pessimistic", "Excited"], "answer": "Pessimistic"},
+    {"question": "Choose the correct word: Their / There / They're going home.", "options": ["Their", "There", "They're", "None"], "answer": "They're"},
+    {"question": "Fill blank: The book is ___ the table.", "options": ["on", "in", "at", "by"], "answer": "on"},
+    {"question": "Meaning of 'inevitable'?", "options": ["Avoidable", "Uncertain", "Certain to happen", "Rare"], "answer": "Certain to happen"},
+    {"question": "Choose the grammatically correct sentence.", "options": ["Me and him went.", "He and I went.", "Him and me went.", "I and he gone."], "answer": "He and I went."},
+    {"question": "Synonym of 'rapid'?", "options": ["Slow", "Fast", "Weak", "Heavy"], "answer": "Fast"},
+    {"question": "Fill blank: She is better ___ math than science.", "options": ["in", "at", "on", "with"], "answer": "at"},
 ]
 
 # ==========================
@@ -95,6 +49,18 @@ english_questions = [
 def home():
     return render_template("index.html")
 
+@app.route("/math")
+def math():
+    return render_template("math.html")
+
+@app.route("/english")
+def english():
+    return render_template("english.html")
+
+@app.route("/quiz")
+def quiz():
+    return render_template("quiz.html")
+
 @app.route("/quiz-options")
 def quiz_options():
     return render_template("quiz-options.html")
@@ -102,10 +68,13 @@ def quiz_options():
 @app.route("/start-quiz/<int:duration>", methods=["GET", "POST"])
 def start_quiz(duration):
 
-    num_questions = 5 if duration == 30 else 8
+    if duration == 30:
+        num_questions = 7
+    else:
+        num_questions = 12
 
-    selected_math = random.sample(math_questions, min(num_questions, len(math_questions)))
-    selected_english = random.sample(english_questions, min(num_questions, len(english_questions)))
+    selected_math = random.sample(math_questions, num_questions)
+    selected_english = random.sample(english_questions, num_questions)
 
     if request.method == "POST":
         results = []
@@ -148,52 +117,6 @@ def start_quiz(duration):
         english_questions=selected_english,
         duration=duration
     )
-
-# ==========================
-# HUGGING FACE AI CHAT (Router)
-# ==========================
-
-HF_TOKEN = os.environ.get("HF_TOKEN")
-
-@app.route("/ask-ai", methods=["POST"])
-def ask_ai():
-    user_input = request.json.get("message")
-
-    headers = {
-        "Authorization": f"Bearer {HF_TOKEN}",
-        "Content-Type": "application/json"
-    }
-
-    payload = {
-        "model": "HuggingFaceH4/zephyr-7b-beta",
-        "messages": [
-            {"role": "system", "content": "You are Jarvis, a helpful SAT tutor."},
-            {"role": "user", "content": user_input}
-        ],
-        "max_tokens": 150,
-        "temperature": 0.7
-    }
-
-    try:
-        response = requests.post(
-            "https://router.huggingface.co/v1/chat/completions",
-            headers=headers,
-            json=payload,
-            timeout=60
-        )
-
-        data = response.json()
-
-        if "error" in data:
-            return jsonify({"reply": f"Error: {data['error']['message']}"})
-
-        reply = data["choices"][0]["message"]["content"]
-
-    except Exception as e:
-        return jsonify({"reply": f"Error: {str(e)}"})
-
-    return jsonify({"reply": reply})
-
 
 if __name__ == "__main__":
     app.run(debug=True)

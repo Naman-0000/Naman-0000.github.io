@@ -1,7 +1,10 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import random
+import sqlite3
+import os
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)  # needed for session management
 
 # ==========================
 # EXPANDED SAT QUESTION BANK
@@ -40,6 +43,25 @@ english_questions = [
     {"question": "Synonym of 'rapid'?", "options": ["Slow", "Fast", "Weak", "Heavy"], "answer": "Fast"},
     {"question": "Fill blank: She is better ___ math than science.", "options": ["in", "at", "on", "with"], "answer": "at"},
 ]
+
+# ==========================
+# DATABASE SETUP (SQLite)
+# ==========================
+
+DB_NAME = "users.db"
+
+def init_db():
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute("""CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT UNIQUE NOT NULL,
+                    password TEXT NOT NULL
+                )""")
+    conn.commit()
+    conn.close()
+
+init_db()
 
 # ==========================
 # ROUTES
@@ -117,6 +139,56 @@ def start_quiz(duration):
         english_questions=selected_english,
         duration=duration
     )
+
+# ==========================
+# LOGIN / REGISTER ROUTES
+# ==========================
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        conn = sqlite3.connect(DB_NAME)
+        c = conn.cursor()
+        c.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
+        user = c.fetchone()
+        conn.close()
+        if user:
+            session["username"] = username
+            return redirect(url_for("home"))
+        else:
+            flash("Invalid username or password")
+            return redirect(url_for("login"))
+    return render_template("login.html")
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        conn = sqlite3.connect(DB_NAME)
+        c = conn.cursor()
+        try:
+            c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+            conn.commit()
+            flash("Account created successfully! You can now login.")
+            return redirect(url_for("login"))
+        except sqlite3.IntegrityError:
+            flash("Username already exists.")
+            return redirect(url_for("register"))
+        finally:
+            conn.close()
+    return render_template("register.html")
+
+@app.route("/logout")
+def logout():
+    session.pop("username", None)
+    return redirect(url_for("home"))
+
+# ==========================
+# RUN APP
+# ==========================
 
 if __name__ == "__main__":
     app.run(debug=True)

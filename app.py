@@ -1,33 +1,26 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import random
-import psycopg2
 import os
+import psycopg2
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)  # session management
+app.secret_key = os.urandom(24)  # needed for session management
 
 # ==========================
-# DATABASE CONFIGURATION (PostgreSQL)
+# DATABASE CONNECTION (PostgreSQL)
 # ==========================
-DB_HOST = os.environ.get("DB_HOST")
-DB_NAME = os.environ.get("DB_NAME")
-DB_USER = os.environ.get("DB_USER")
-DB_PASS = os.environ.get("DB_PASS")
-DB_PORT = os.environ.get("DB_PORT", 5432)
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
 def get_db_connection():
-    return psycopg2.connect(
-        host=DB_HOST,
-        database=DB_NAME,
-        user=DB_USER,
-        password=DB_PASS,
-        port=DB_PORT
-    )
+    if not DATABASE_URL:
+        raise ValueError("DATABASE_URL environment variable not set")
+    return psycopg2.connect(DATABASE_URL)
 
 def init_db():
     conn = get_db_connection()
-    c = conn.cursor()
-    c.execute("""
+    cur = conn.cursor()
+    cur.execute("""
         CREATE TABLE IF NOT EXISTS users (
             id SERIAL PRIMARY KEY,
             username TEXT UNIQUE NOT NULL,
@@ -35,13 +28,12 @@ def init_db():
         )
     """)
     conn.commit()
-    c.close()
     conn.close()
 
-init_db()
+init_db()  # run once on first deployment
 
 # ==========================
-# SAT QUESTION BANK
+# EXPANDED SAT QUESTION BANK
 # ==========================
 
 math_questions = [
@@ -97,21 +89,21 @@ def english():
 @app.route("/quiz")
 def quiz():
     if "username" not in session:
-        flash("You must login to access the quiz")
+        flash("You must be logged in to access the quiz.")
         return redirect(url_for("login"))
     return render_template("quiz.html")
 
 @app.route("/quiz-options")
 def quiz_options():
     if "username" not in session:
-        flash("You must login to access the quiz")
+        flash("Login required.")
         return redirect(url_for("login"))
     return render_template("quiz-options.html")
 
 @app.route("/start-quiz/<int:duration>", methods=["GET", "POST"])
 def start_quiz(duration):
     if "username" not in session:
-        flash("You must login to start the quiz")
+        flash("Login required.")
         return redirect(url_for("login"))
 
     num_questions = 7 if duration == 30 else 12
@@ -170,10 +162,9 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
         conn = get_db_connection()
-        c = conn.cursor()
-        c.execute("SELECT * FROM users WHERE username=%s AND password=%s", (username, password))
-        user = c.fetchone()
-        c.close()
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM users WHERE username=%s AND password=%s", (username, password))
+        user = cur.fetchone()
         conn.close()
         if user:
             session["username"] = username
@@ -189,18 +180,17 @@ def register():
         username = request.form["username"]
         password = request.form["password"]
         conn = get_db_connection()
-        c = conn.cursor()
+        cur = conn.cursor()
         try:
-            c.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, password))
+            cur.execute("INSERT INTO users (username, password) VALUES (%s, %s)", (username, password))
             conn.commit()
             flash("Account created successfully! You can now login.")
             return redirect(url_for("login"))
-        except psycopg2.IntegrityError:
-            flash("Username already exists.")
+        except psycopg2.errors.UniqueViolation:
             conn.rollback()
+            flash("Username already exists.")
             return redirect(url_for("register"))
         finally:
-            c.close()
             conn.close()
     return render_template("register.html")
 
@@ -216,17 +206,9 @@ def logout():
 @app.route("/dashboard")
 def dashboard():
     if "username" not in session:
-        flash("You must login to access the dashboard")
+        flash("Login required.")
         return redirect(url_for("login"))
-
-    conn = get_db_connection()
-    c = conn.cursor()
-    c.execute("SELECT username FROM users")
-    users = c.fetchall()
-    c.close()
-    conn.close()
-
-    return render_template("dashboard.html", username=session["username"], users=users)
+    return render_template("dashboard.html", username=session["username"])
 
 # ==========================
 # RUN APP

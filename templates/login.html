@@ -5,6 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - SAT Resource Hub</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .login-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      margin: 50px 20px;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .login-form, .login-info {
+      background-color: #f9f9f9;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 400px;
+      flex: 1;
+    }
+    .login-form h2, .login-info h2 {
+      margin-bottom: 20px;
+      color: #800080;
+    }
+    .login-form label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    .login-form input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .login-form button {
+      background-color: #800080;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+    .login-form button:hover {
+      background-color: #5a005a;
+    }
+    .login-info ul {
+      list-style: disc inside;
+      line-height: 1.8;
+    }
+  </style>
 </head>
 <body>
 
@@ -21,24 +71,40 @@
     </nav>
   </header>
 
-  <!-- LOGIN FORM -->
-  <section class="form-section">
-    <h2>Login to Your Account</h2>
-    <form action="{{ url_for('login') }}" method="POST">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required>
+  <!-- LOGIN SECTION -->
+  <section class="login-container">
+    
+    <!-- Login Form -->
+    <div class="login-form">
+      <h2>Login to Your Account</h2>
+      <form action="{{ url_for('login') }}" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
 
-      <button type="submit" class="btn">Login</button>
-    </form>
+        <button type="submit">Login</button>
+      </form>
+      <p style="margin-top:10px;">Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+    </div>
 
-    <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+    <!-- Advantages / Info -->
+    <div class="login-info">
+      <h2>Why Sign In?</h2>
+      <ul>
+        <li>Track your quiz scores and progress over time</li>
+        <li>Access personalized SAT quizzes</li>
+        <li>Save your favorite resources for quick access</li>
+        <li>Get recommendations based on your performance</li>
+        <li>Receive updates on latest SAT strategies and tips</li>
+      </ul>
+    </div>
+
   </section>
 
   <!-- FOOTER -->
-  <footer>
+  <footer style="text-align:center; margin-top:40px;">
     © 2026 SAT Resource Hub | Digital SAT Made Simple
   </footer>
 

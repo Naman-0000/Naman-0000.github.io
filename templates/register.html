@@ -5,6 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register - SAT Resource Hub</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .register-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      margin: 50px 20px;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .register-form, .register-info {
+      background-color: #f9f9f9;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 400px;
+      flex: 1;
+    }
+    .register-form h2, .register-info h2 {
+      margin-bottom: 20px;
+      color: #800080;
+    }
+    .register-form label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    .register-form input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .register-form button {
+      background-color: #800080;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+    .register-form button:hover {
+      background-color: #5a005a;
+    }
+    .register-info ul {
+      list-style: disc inside;
+      line-height: 1.8;
+    }
+  </style>
 </head>
 <body>
 
@@ -21,30 +71,46 @@
     </nav>
   </header>
 
-  <!-- REGISTER FORM -->
-  <section class="form-section">
-    <h2>Create Your Account</h2>
-    <form action="{{ url_for('register') }}" method="POST">
-      <label for="username">Username:</label>
-      <input type="text" id="username" name="username" required>
+  <!-- REGISTER SECTION -->
+  <section class="register-container">
+    
+    <!-- Registration Form -->
+    <div class="register-form">
+      <h2>Create Your Account</h2>
+      <form action="{{ url_for('register') }}" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
 
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" name="password" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
 
-      <label for="confirm_password">Confirm Password:</label>
-      <input type="password" id="confirm_password" name="confirm_password" required>
+        <label for="confirm_password">Confirm Password:</label>
+        <input type="password" id="confirm_password" name="confirm_password" required>
 
-      <button type="submit" class="btn">Register</button>
-    </form>
+        <button type="submit">Register</button>
+      </form>
+      <p style="margin-top:10px;">Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+    </div>
 
-    <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+    <!-- Advantages / Info -->
+    <div class="register-info">
+      <h2>Why Register?</h2>
+      <ul>
+        <li>Track your quiz scores and see progress over time</li>
+        <li>Get access to personalized quizzes tailored to your level</li>
+        <li>Save favorite resources for easy access anytime</li>
+        <li>Receive recommendations based on your quiz performance</li>
+        <li>Stay updated with the latest SAT tips and strategies</li>
+      </ul>
+    </div>
+
   </section>
 
   <!-- FOOTER -->
-  <footer>
+  <footer style="text-align:center; margin-top:40px;">
     © 2026 SAT Resource Hub | Digital SAT Made Simple
   </footer>
 

@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import random
-import sqlite3
 import os
+import psycopg2
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)  # needed for session management
+app.secret_key = os.urandom(24)
 
 # ==========================
 # EXPANDED SAT QUESTION BANK
@@ -45,20 +45,24 @@ english_questions = [
 ]
 
 # ==========================
-# DATABASE SETUP (SQLite)
+# DATABASE SETUP (PostgreSQL)
 # ==========================
 
-DB_NAME = "users.db"
+def get_db_connection():
+    return psycopg2.connect(os.environ.get("DATABASE_URL"))
 
 def init_db():
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute("""CREATE TABLE IF NOT EXISTS users (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    username TEXT UNIQUE NOT NULL,
-                    password TEXT NOT NULL
-                )""")
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            username VARCHAR(100) UNIQUE NOT NULL,
+            password VARCHAR(200) NOT NULL
+        );
+    """)
     conn.commit()
+    cur.close()
     conn.close()
 
 init_db()
@@ -81,14 +85,21 @@ def english():
 
 @app.route("/quiz")
 def quiz():
+    if "username" not in session:
+        return redirect(url_for("login"))
     return render_template("quiz.html")
 
 @app.route("/quiz-options")
 def quiz_options():
+    if "username" not in session:
+        return redirect(url_for("login"))
     return render_template("quiz-options.html")
 
 @app.route("/start-quiz/<int:duration>", methods=["GET", "POST"])
 def start_quiz(duration):
+
+    if "username" not in session:
+        return redirect(url_for("login"))
 
     if duration == 30:
         num_questions = 7
@@ -141,7 +152,7 @@ def start_quiz(duration):
     )
 
 # ==========================
-# LOGIN / REGISTER ROUTES
+# LOGIN / REGISTER (PostgreSQL)
 # ==========================
 
 @app.route("/login", methods=["GET", "POST"])
@@ -149,37 +160,53 @@ def login():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        conn = sqlite3.connect(DB_NAME)
-        c = conn.cursor()
-        c.execute("SELECT * FROM users WHERE username=? AND password=?", (username, password))
-        user = c.fetchone()
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT * FROM users WHERE username = %s AND password = %s",
+            (username, password)
+        )
+        user = cur.fetchone()
+        cur.close()
         conn.close()
+
         if user:
             session["username"] = username
             return redirect(url_for("home"))
         else:
             flash("Invalid username or password")
             return redirect(url_for("login"))
+
     return render_template("login.html")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
-        conn = sqlite3.connect(DB_NAME)
-        c = conn.cursor()
+
+        conn = get_db_connection()
+        cur = conn.cursor()
         try:
-            c.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+            cur.execute(
+                "INSERT INTO users (username, password) VALUES (%s, %s)",
+                (username, password)
+            )
             conn.commit()
             flash("Account created successfully! You can now login.")
             return redirect(url_for("login"))
-        except sqlite3.IntegrityError:
+        except psycopg2.errors.UniqueViolation:
+            conn.rollback()
             flash("Username already exists.")
             return redirect(url_for("register"))
         finally:
+            cur.close()
             conn.close()
+
     return render_template("register.html")
+
 
 @app.route("/logout")
 def logout():

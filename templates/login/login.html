@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Login | SAT Resource Hub</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header>
+    <nav>
+      <h1>SAT Resource Hub</h1>
+      <ul>
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('math') }}">Math</a></li>
+        <li><a href="{{ url_for('english') }}">Reading & Writing</a></li>
+        <li><a href="{{ url_for('quiz') }}">Quiz</a></li>
+        <li><a href="{{ url_for('login') }}" class="active">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- LOGIN FORM -->
+  <section class="hero">
+    <h2>Student Login</h2>
+    <p>Access your account to track your progress and take quizzes.</p>
+
+    <form action="{{ url_for('login') }}" method="POST" class="login-form">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+      <button type="submit" class="btn">Login</button>
+    </form>
+
+    <p style="margin-top: 15px;">Don't have an account? <a href="{{ url_for('register') }}">Register here</a>.</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    © 2026 SAT Resource Hub | Digital SAT Made Simple
+  </footer>
+
+</body>
+</html>

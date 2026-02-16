@@ -3,36 +3,72 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SAT Resource Hub</title>
+  <title>Dashboard - SAT Resource Hub</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <style>
-    /* Dashboard preview / floating cards */
-    .dashboard-preview {
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+    header nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #800080;
+      padding: 10px 20px;
+    }
+    header nav h1 {
+      color: white;
+      margin: 0;
+    }
+    header nav ul {
+      list-style: none;
+      display: flex;
+      gap: 15px;
+      margin: 0;
+      padding: 0;
+    }
+    header nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 6px 12px;
+      border-radius: 5px;
+    }
+    header nav ul li a:hover {
+      background-color: #a040a0;
+    }
+    .dashboard-container {
       max-width: 1100px;
-      margin: 40px auto;
+      margin: 30px auto;
       padding: 0 20px;
     }
-    .dashboard-preview h2 {
-      font-size: 2rem;
-      margin-bottom: 20px;
+    .welcome {
       text-align: center;
+      font-size: 1.8rem;
+      margin-bottom: 30px;
     }
     .cards-section {
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
+      justify-content: center;
       margin-bottom: 40px;
     }
     .card {
-      flex: 1 1 calc(25% - 20px);
-      background-color: #f8f8f8;
+      flex: 1 1 calc(30% - 20px);
+      background-color: #fff;
       padding: 20px;
       border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       text-align: center;
+      min-width: 250px;
     }
     .card h3 {
       margin-bottom: 10px;
+      color: #800080;
     }
     .btn {
       display: inline-block;
@@ -43,6 +79,44 @@
       border-radius: 8px;
       margin-top: 10px;
     }
+    .btn:hover {
+      background-color: #a040a0;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    th, td {
+      border-bottom: 1px solid #ddd;
+      padding: 12px;
+      text-align: center;
+    }
+    th {
+      background-color: #800080;
+      color: white;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    @media (max-width: 900px) {
+      .card {
+        flex: 1 1 calc(45% - 20px);
+      }
+    }
+    @media (max-width: 600px) {
+      .card {
+        flex: 1 1 100%;
+      }
+    }
   </style>
 </head>
 <body>
@@ -52,140 +126,56 @@
     <nav>
       <h1>SAT Resource Hub</h1>
       <ul>
-        <li><a href="{{ url_for('home') }}" class="active">Home</a></li>
-        <li><a href="{{ url_for('math') }}">Math</a></li>
-        <li><a href="{{ url_for('english') }}">Reading & Writing</a></li>
-        <li><a href="{{ url_for('quiz') }}">Quiz</a></li>
-        {% if session.username %}
-          <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
-          <li><a href="{{ url_for('logout') }}">Logout</a></li>
-        {% else %}
-          <li><a href="{{ url_for('login') }}">Login</a></li>
-          <li><a href="{{ url_for('register') }}">Register</a></li>
-        {% endif %}
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('dashboard') }}" class="active">Dashboard</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
       </ul>
     </nav>
   </header>
 
-  <!-- HERO -->
-  <section class="hero">
-    <h2>Crack the Digital SAT</h2>
-    <p>Understand the test, master the syllabus, and use the best resources — all in one place.</p>
-    <a href="{{ url_for('math') }}" class="btn">Start with Math</a>
-  </section>
+  <div class="dashboard-container">
+    <div class="welcome">
+      Welcome, {{ session['username'] }}!
+    </div>
 
-  <!-- Dashboard Preview for Logged-in Users -->
-  {% if session.username %}
-  <section class="dashboard-preview">
-    <h2>Welcome back, {{ session.username }}!</h2>
+    <!-- Floating Cards -->
     <div class="cards-section">
       <div class="card">
-        <h3>Start Quiz</h3>
-        <p>Test your SAT skills with a timed quiz and instant feedback.</p>
-        <a href="{{ url_for('quiz_options') }}" class="btn">Start →</a>
+        <h3>Track Your Scores</h3>
+        <p>Review past quiz attempts and track your improvement over time.</p>
       </div>
       <div class="card">
-        <h3>View Quiz History</h3>
-        <p>Track your past quiz scores and improvement.</p>
-        <a href="{{ url_for('dashboard') }}" class="btn">View →</a>
+        <h3>Start a Quiz</h3>
+        <p>Quickly start Math or Reading & Writing quizzes from here.</p>
+        <a href="{{ url_for('quiz_options') }}" class="btn">Start Quiz</a>
       </div>
       <div class="card">
-        <h3>Math Resources</h3>
-        <p>Access formulas, tricks, and practice questions.</p>
-        <a href="{{ url_for('math') }}" class="btn">Explore →</a>
-      </div>
-      <div class="card">
-        <h3>English Resources</h3>
-        <p>Reading strategies, grammar tips, and practice exercises.</p>
-        <a href="{{ url_for('english') }}" class="btn">Explore →</a>
+        <h3>Plan Your Study</h3>
+        <p>Focus on topics that need more practice based on your results.</p>
       </div>
     </div>
-  </section>
-  {% endif %}
 
-  <!-- DIGITAL SAT INFO -->
-  <section class="cards-section">
-    <div class="card">
-      <h3>What is the Digital SAT?</h3>
-      <p>
-        The SAT is now fully digital and taken on your own device using the
-        official College Board <strong>Bluebook</strong> app.
-      </p>
-      <p>
-        The test is <strong>adaptive</strong>, meaning the difficulty of questions
-        adjusts based on your performance.
-      </p>
-    </div>
-
-    <div class="card">
-      <h3>Exam Structure & Duration</h3>
-      <ul>
-        <li>2 main sections: Math, Reading & Writing</li>
-        <li>Each section has 2 adaptive modules</li>
-        <li>Total testing time: ~2 hours 14 minutes</li>
-        <li>Short breaks included between sections</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- SYLLABUS -->
-  <section class="cards-section">
-    <div class="card">
-      <h3>SAT Math Syllabus</h3>
-      <ul>
-        <li>Algebra</li>
-        <li>Advanced Math</li>
-        <li>Problem Solving & Data Analysis</li>
-        <li>Geometry & Trigonometry</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>SAT Reading & Writing Syllabus</h3>
-      <ul>
-        <li>Reading comprehension (short passages)</li>
-        <li>Grammar & punctuation</li>
-        <li>Sentence structure</li>
-        <li>Rhetorical skills</li>
-        <li>Vocabulary in context</li>
-      </ul>
-    </div>
-  </section>
-
-  <!-- FEATURE REDIRECTS -->
-  <section class="features">
-    <div class="feature">
-      <h3>Math</h3>
-      <p>
-        Concepts, formulas, Desmos tips, and practice questions
-        for every SAT Math topic.
-      </p>
-      <a href="{{ url_for('math') }}">Explore Math →</a>
-    </div>
-
-    <div class="feature">
-      <h3>Reading & Writing</h3>
-      <p>
-        Grammar rules, reading strategies, and question patterns
-        explained clearly.
-      </p>
-      <a href="{{ url_for('english') }}">Explore R&W →</a>
-    </div>
-
-    <div class="feature">
-      <h3>SAT Quiz</h3>
-      <p>
-        Test your SAT skills with timed quizzes and instant feedback to see
-        where you can improve.
-      </p>
-      <a href="{{ url_for('quiz') }}">Start Quiz →</a>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    © 2026 SAT Resource Hub | Digital SAT Made Simple
-  </footer>
+    <!-- Quiz History Table -->
+    <h2>Your Quiz History</h2>
+    {% if quiz_results %}
+      <table>
+        <tr>
+          <th>Date</th>
+          <th>Subject</th>
+          <th>Score</th>
+        </tr>
+        {% for quiz in quiz_results %}
+        <tr>
+          <td>{{ quiz.timestamp.strftime("%Y-%m-%d %H:%M") }}</td>
+          <td>{{ quiz.subject }}</td>
+          <td>{{ quiz.score }} / {{ quiz.total_questions }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <p style="text-align:center;">You haven't taken any quizzes yet. Start one now!</p>
+    {% endif %}
+  </div>
 
 </body>
 </html>
